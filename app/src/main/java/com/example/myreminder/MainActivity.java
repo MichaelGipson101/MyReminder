@@ -10,12 +10,26 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
 
     //declare intent
     Intent intent;
+
+    //declare a DBHandler
+    DBHandler dbHandler;
+
+    //declare a reminder cursoradapter
+    CursorAdapter reminderCursorAdapter;
+
+    //declare a listview
+    ListView reminderListView;
 
     /**
      * This method initializes the action bar and view of the activity
@@ -28,6 +42,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //initialize dbhandler
+        dbHandler = new DBHandler(this, null);
+        //initialize listview
+        reminderListView = (ListView) findViewById(R.id.reminderListView);
+
+        //initialize cursoradapter
+        reminderCursorAdapter = new ReminderList(this, dbHandler.getReminders(), 0);
+
+        //set reminder cursoradapter on listview
+        reminderListView.setAdapter(reminderCursorAdapter);
+
+        getSupportActionBar().setSubtitle(reminderListView.getAdapter().getCount() + " Reminders");
     }
 
     /**
