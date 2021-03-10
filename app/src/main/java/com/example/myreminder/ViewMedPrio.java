@@ -6,17 +6,17 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
+
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+
+
+public class ViewMedPrio extends AppCompatActivity {
 
 
     //declare intent
@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
     DBHandler dbHandler;
 
     //declare a reminder cursoradapter
-    CursorAdapter reminderCursorAdapter;
+    CursorAdapter mediumPriorityCursorAdapter;
 
     //declare a listview
-    ListView reminderListView;
+    ListView mediumPriorityListView;
 
     /**
      * This method initializes the action bar and view of the activity
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //initializes the view and action bar of the activity
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_view_medium_priority);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,15 +47,15 @@ public class MainActivity extends AppCompatActivity {
         //initialize dbhandler
         dbHandler = new DBHandler(this, null);
         //initialize listview
-        reminderListView = (ListView) findViewById(R.id.reminderListView);
+        mediumPriorityListView = (ListView) findViewById(R.id.mediumPriorityListView);
 
         //initialize cursoradapter
-        reminderCursorAdapter = new ReminderList(this, dbHandler.getReminders(), 0);
+        mediumPriorityCursorAdapter = new MedPriorities(this, dbHandler.getMediumPriorityReminders(), 0);
 
         //set reminder cursoradapter on listview
-        reminderListView.setAdapter(reminderCursorAdapter);
+        mediumPriorityListView.setAdapter(mediumPriorityCursorAdapter);
 
-        getSupportActionBar().setSubtitle(reminderListView.getAdapter().getCount() + " Reminders");
+        getSupportActionBar().setSubtitle("Medium");
     }
 
     /**
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_view_medium_priority, menu);
         return true;
     }
 
@@ -92,34 +92,9 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, AddReminder.class);
                 startActivity(intent);
                 return true;
-            case R.id.action_view_high_priority :
-                //initialize an intent for the AddReminder activity
-                intent = new Intent(this, ViewHighPrio.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_view_medium_priority :
-                //initialize an intent for the AddReminder activity
-                intent = new Intent(this, ViewMedPrio.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_view_low_priority :
-                //initialize an intent for the AddReminder activity
-                intent = new Intent(this, ViewLowPrio.class);
-                startActivity(intent);
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    /**
-     * This method is called when the add floating action button is clicked.
-     * It starts the addreminder activity.
-     * @param view
-     */
-    public void openAddReminder(View view){
-        //initializes an intent for the addreminder activity and starts it
-        intent = new Intent(this, AddReminder.class);
-        startActivity(intent);
-    }
 }

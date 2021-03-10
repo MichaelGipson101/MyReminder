@@ -9,13 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHandler extends SQLiteOpenHelper {
     //initialize database's constants
     public static final String DATABASE_NAME = "reminder.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_REMINDERS = "reminders";
     public static final String COLUMN_REMINDER_ID = "_id";
     public static final String COLUMN_REMINDER_NAME = "name";
     public static final String COLUMN_REMINDER_TEXT = "text";
     public static final String COLUMN_REMINDER_DATE = "date";
+    public static final String COLUMN_REMINDER_PRIORITY = "priority";
 
 
     public DBHandler(Context context, SQLiteDatabase.CursorFactory factory) {
@@ -33,7 +34,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 COLUMN_REMINDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_REMINDER_NAME + " TEXT, " +
                 COLUMN_REMINDER_TEXT + " TEXT, " +
-                COLUMN_REMINDER_DATE + " TEXT);";
+                COLUMN_REMINDER_DATE + " TEXT " +
+                COLUMN_REMINDER_PRIORITY + " TEXT);";
 
         //statement execute
         sqLiteDatabase.execSQL(query);
@@ -65,7 +67,7 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param text reminder text
      * @param date reminder date
      */
-    public void addAReminder(String name, String text, String date) {
+    public void addAReminder(String name, String text, String date, String priority) {
         //get reference to reminder DB
         SQLiteDatabase db = getWritableDatabase();
 
@@ -76,6 +78,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_REMINDER_NAME, name);
         values.put(COLUMN_REMINDER_TEXT, text);
         values.put(COLUMN_REMINDER_DATE, date);
+        values.put(COLUMN_REMINDER_PRIORITY, priority);
 
         //insert data in contentvalues obj into reminder table
         db.insert(TABLE_REMINDERS, null, values);
@@ -99,6 +102,40 @@ public class DBHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_REMINDERS;
 
         //execute the statement and return it as a cursor
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getHighPriorityReminders() {
+        //get reference to reminder DB
+        SQLiteDatabase db = getWritableDatabase();
+
+        //define select statement and store it in a string
+        String query = "SELECT * FROM " + TABLE_REMINDERS +
+                " WHERE " + COLUMN_REMINDER_PRIORITY + " = " + "'High'";
+
+        //execute select statement
+        return db.rawQuery(query, null);
+    }
+    public Cursor getMediumPriorityReminders() {
+        //get reference to reminder DB
+        SQLiteDatabase db = getWritableDatabase();
+
+        //define select statement and store it in a string
+        String query = "SELECT * FROM " + TABLE_REMINDERS +
+                " WHERE " + COLUMN_REMINDER_PRIORITY + " = " + "'Medium'";
+
+        //execute select statement
+        return db.rawQuery(query, null);
+    }
+    public Cursor getLowPriorityReminders() {
+        //get reference to reminder DB
+        SQLiteDatabase db = getWritableDatabase();
+
+        //define select statement and store it in a string
+        String query = "SELECT * FROM " + TABLE_REMINDERS +
+                " WHERE " + COLUMN_REMINDER_PRIORITY + " = " + "'Low'";
+
+        //execute select statement
         return db.rawQuery(query, null);
     }
 }

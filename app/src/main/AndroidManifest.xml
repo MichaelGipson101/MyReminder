@@ -10,9 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyReminder">
         <activity
+            android:name=".ViewLowPrio"
+            android:label="@string/title_activity_view_low_prio"
+            android:theme="@style/Theme.MyReminder.NoActionBar"></activity>
+        <activity
+            android:name=".ViewMedPrio"
+            android:label="@string/title_activity_view_med_prio"
+            android:theme="@style/Theme.MyReminder.NoActionBar" />
+        <activity
+            android:name=".ViewHighPrio"
+            android:label="@string/title_activity_view_high_prio"
+            android:theme="@style/Theme.MyReminder.NoActionBar" />
+        <activity
             android:name=".AddReminder"
             android:label="@string/title_activity_add_reminder"
-            android:theme="@style/Theme.MyReminder.NoActionBar"></activity>
+            android:theme="@style/Theme.MyReminder.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
