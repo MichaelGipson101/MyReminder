@@ -139,7 +139,7 @@ public class AddReminder extends AppCompatActivity implements AdapterView.OnItem
         //trim strings and see if they are equal to empty string
         if (name.trim().equals("") || text.trim().equals("") || date.trim().equals("") || priority.trim().equals("")){
             //display toast
-            Toast.makeText(this, "Please enter a title and text!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter a title, text and priority!", Toast.LENGTH_LONG).show();
         } else {
             //add list to DB
             dbHandler.addAReminder(name, text, date, priority);

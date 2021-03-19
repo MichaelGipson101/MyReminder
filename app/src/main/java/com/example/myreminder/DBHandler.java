@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHandler extends SQLiteOpenHelper {
     //initialize database's constants
     public static final String DATABASE_NAME = "reminder.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_REMINDERS = "reminders";
     public static final String COLUMN_REMINDER_ID = "_id";
@@ -34,7 +34,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 COLUMN_REMINDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_REMINDER_NAME + " TEXT, " +
                 COLUMN_REMINDER_TEXT + " TEXT, " +
-                COLUMN_REMINDER_DATE + " TEXT " +
+                COLUMN_REMINDER_DATE + " TEXT, " +
                 COLUMN_REMINDER_PRIORITY + " TEXT);";
 
         //statement execute
