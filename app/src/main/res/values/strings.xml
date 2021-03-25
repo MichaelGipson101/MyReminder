@@ -14,6 +14,11 @@
     <string name="view_low_priority">View Low Priority</string>
     <string name="view_high_priority">View High Priority</string>
     <string name="priority">Priority</string>
+    <string name="title_activity_view_reminder">View Reminder</string>
+    <string name="delete_reminder">Delete Reminder</string>
+
+
+
     <string-array name="priority">
         <item></item>
         <item>High</item>

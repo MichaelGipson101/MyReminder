@@ -105,6 +105,23 @@ public class DBHandler extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
+    /**
+     * this method is going to get called when the viewreminder activity is started
+     * @param reminderId database id of clicked reminder
+     * @return Cursor that contains all of the data associated with the clicked reminder
+     */
+    public Cursor getReminder (Integer reminderId) {
+        //get reference to reminder db
+        SQLiteDatabase db = getWritableDatabase();
+
+        //define select statement
+        String query = "SELECT * FROM " + TABLE_REMINDERS +
+                " WHERE " + COLUMN_REMINDER_ID + " = " + reminderId;
+
+        //execute select statement
+        return db.rawQuery(query, null);
+    }
+
     public Cursor getHighPriorityReminders() {
         //get reference to reminder DB
         SQLiteDatabase db = getWritableDatabase();
@@ -137,5 +154,22 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //execute select statement
         return db.rawQuery(query, null);
+    }
+    /**
+     * This method gets called when the delete button in the action bar of the view reminder activity gets clicked
+     * @param reminderId database id of the reminder to be deleted
+     */
+    public void deleteReminder(Integer reminderId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        //define a delete statement and store it in a string
+        String query = "DELETE FROM " + TABLE_REMINDERS +
+                " WHERE " + COLUMN_REMINDER_ID + " = " + reminderId;
+
+        //execute statement
+        db.execSQL(query);
+
+        //close db ref
+        db.close();
     }
 }

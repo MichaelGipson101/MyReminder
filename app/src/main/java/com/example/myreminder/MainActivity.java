@@ -10,6 +10,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         //initialize dbhandler
         dbHandler = new DBHandler(this, null);
         //initialize listview
@@ -56,6 +56,28 @@ public class MainActivity extends AppCompatActivity {
         reminderListView.setAdapter(reminderCursorAdapter);
 
         getSupportActionBar().setSubtitle(reminderListView.getAdapter().getCount() + " Reminders");
+
+        //register an onitemclicklistener to the listview
+        reminderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * This method gets called when an item in the listview is clicked
+             * @param parent item list view
+             * @param view viewreminder activity view
+             * @param position position of clicked item
+             * @param id database id of clicked item
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //initialize intent for viewreminder activity
+                intent = new Intent(MainActivity.this, ViewReminder.class);
+
+                //put the database id in the intent
+                intent.putExtra("_id", id);
+
+                //start the viewreminder activity
+                startActivity(intent);
+            }
+        });
     }
 
     /**
