@@ -172,4 +172,55 @@ public class DBHandler extends SQLiteOpenHelper {
         //close db ref
         db.close();
     }
+    /**
+     * This method gets called when the delete button in the viewreminder activity is clicked.
+     * @param priority priority of the reminder
+     * @return returns a notification if all high priority reminders are deleted
+     */
+    public Cursor getDeletedHighPriority(String priority) {
+        //get reference to database
+        SQLiteDatabase db = getWritableDatabase();
+
+        //define select statement
+        String query = "SELECT * FROM " + TABLE_REMINDERS +
+                " WHERE " + COLUMN_REMINDER_PRIORITY + " = '" + priority + "'";
+
+
+        // execute select statement and store it in a Cursor
+        return db.rawQuery(query, null);
+    }
+    /**
+     * This method gets called when the delete button in the viewreminder activity is clicked.
+     * @param priority priority of the reminder
+     * @return returns a notification if all medium priority reminders are deleted
+     */
+   public Cursor getDeletedMediumPriority(String priority) {
+       //get reference to database
+       SQLiteDatabase db = getWritableDatabase();
+
+       //define select statement
+       String query = "SELECT * FROM " + TABLE_REMINDERS +
+               " WHERE " + COLUMN_REMINDER_PRIORITY + " = '" + priority + "'";
+
+
+       // execute select statement and store it in a Cursor
+       return db.rawQuery(query, null);
+    }
+    /**
+     * This method gets called when the delete button in the viewreminder activity is clicked.
+     * @param priority priority of the reminder
+     * @return returns a notification if all low priority reminders are deleted
+     */
+     public Cursor getDeletedLowPriority(String priority) {
+         //get reference to database
+         SQLiteDatabase db = getWritableDatabase();
+
+         //define select statement
+         String query = "SELECT * FROM " + TABLE_REMINDERS +
+                 " WHERE " + COLUMN_REMINDER_PRIORITY + " = '" + priority + "'";
+
+
+         // execute select statement and store it in a Cursor
+         return db.rawQuery(query, null);
+     }
 }

@@ -1,7 +1,11 @@
 package com.example.myreminder;
-
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -9,12 +13,15 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import static com.example.myreminder.App.CHANNEL_REMINDER_ID;
 
 public class ViewReminder extends AppCompatActivity {
 
@@ -39,6 +46,12 @@ public class ViewReminder extends AppCompatActivity {
     String name;
     String text;
     String priority;
+
+    //declare notification manager used to show the notification
+    NotificationManagerCompat notificationManagerCompat;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +93,9 @@ public class ViewReminder extends AppCompatActivity {
         nameEditText.setText(name);
         textEditText.setText(text);
         priorityEditText.setText(priority);
+
+        //initialize the notification manager
+        notificationManagerCompat = NotificationManagerCompat.from(this);
     }
 
     /**
@@ -120,6 +136,8 @@ public class ViewReminder extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
     /**
      * This method gets called when the delete button in the action bar of the view reminder activity gets clicked
      * @param menuItem database id of the shopping list item to be deleted
@@ -130,5 +148,46 @@ public class ViewReminder extends AppCompatActivity {
 
         //display item deleted toast
         Toast.makeText(this, "Reminder Deleted!", Toast.LENGTH_LONG).show();
+
+        //displays notification if all high priority reminders are deleted
+        if((dbHandler.getDeletedHighPriority((String) this.priority)).getCount() == 0 && this.priority.equals("High")){
+            // initialize Notification
+            Notification notification = new NotificationCompat.Builder(this,
+                    CHANNEL_REMINDER_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("MyReminder")
+                    .setContentText("High priority reminders deleted!").build();
+
+            // show notification
+            notificationManagerCompat.notify(1, notification);
+
+        }
+        //displays notification if all medium priority reminders are deleted
+        if((dbHandler.getDeletedMediumPriority((String) this.priority)).getCount() == 0 && this.priority.equals("Medium")){
+            // initialize Notification
+            Notification notification = new NotificationCompat.Builder(this,
+                    CHANNEL_REMINDER_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("MyReminder")
+                    .setContentText("Medium priority reminders deleted!").build();
+
+            // show notification
+            notificationManagerCompat.notify(1, notification);
+
+        }
+        //displays notification if all low priority reminders are deleted
+        if((dbHandler.getDeletedLowPriority((String) this.priority)).getCount() == 0 && this.priority.equals("Low")){
+            // initialize Notification
+            Notification notification = new NotificationCompat.Builder(this,
+                    CHANNEL_REMINDER_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("MyReminder")
+                    .setContentText("Low priority reminders deleted!").build();
+
+            // show notification
+            notificationManagerCompat.notify(1, notification);
+
+        }
     }
     }
+
