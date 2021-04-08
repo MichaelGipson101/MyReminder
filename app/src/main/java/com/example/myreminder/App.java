@@ -35,19 +35,19 @@ public class App extends Application {
         //on lower versions
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //initialize notification channel - must give it an ID, name, and importance
-            NotificationChannel channelshopper = new NotificationChannel(
+            NotificationChannel channelreminder = new NotificationChannel(
                     CHANNEL_REMINDER_ID,
                     "Channel Reminder",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
             //customize the notification channel - set its description
-            channelshopper.setDescription("This is the myreminder channel.");
+            channelreminder.setDescription("This is the myreminder channel.");
 
             //initialize a notification manager
             NotificationManager manager = getSystemService(NotificationManager.class);
 
             //create shopper notification channel
-            manager.createNotificationChannel(channelshopper);
+            manager.createNotificationChannel(channelreminder);
         }
     }
 }
