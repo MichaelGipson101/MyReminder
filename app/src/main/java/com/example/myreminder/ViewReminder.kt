@@ -1,101 +1,82 @@
-package com.example.myreminder;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
+package com.example.myreminder
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import static com.example.myreminder.App.CHANNEL_REMINDER_ID;
-
-public class ViewReminder extends AppCompatActivity {
-
+class ViewReminder : AppCompatActivity() {
     //delcare a bundle and a long used to get and store the data sent from
     //the viewlist activity
-    Bundle bundle;
-    long id;
-
+    var bundle: Bundle? = null
+    var id: Long = 0
 
     //declare a dbhandler
-    DBHandler dbHandler;
+    var dbHandler: DBHandler? = null
 
     //declare an intent
-    Intent intent;
+    //var intent: Intent? = null
 
     //declare edittexts
-    EditText nameEditText;
-    EditText textEditText;
-    EditText priorityEditText;
+    var nameEditText: EditText? = null
+    var textEditText: EditText? = null
+    var priorityEditText: EditText? = null
 
     //declare strings to store the clicked shopping list item's name, price, quantity
-    String name;
-    String text;
-    String priority;
+    var name: String? = null
+    var text: String? = null
+    var priority: String? = null
 
     //declare notification manager used to show the notification
-    NotificationManagerCompat notificationManagerCompat;
-
-
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_reminder);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    var notificationManagerCompat: NotificationManagerCompat? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_view_reminder)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         //initialize the bundle
-        bundle = this.getIntent().getExtras();
+        bundle = getIntent().extras
 
         //use bundle to get id and store it in id field
-        id = bundle.getLong("_id");
+        id = bundle!!.getLong("_id")
 
         //initialize dbhandler
-        dbHandler = new DBHandler(this, null);
+        dbHandler = DBHandler(this, null)
 
         //initialize edittexts
-        nameEditText = (EditText) findViewById(R.id.nameEditText);
-        textEditText = (EditText) findViewById(R.id.textEditText);
-        priorityEditText = (EditText) findViewById(R.id.priorityEditText);
+        nameEditText = findViewById<View>(R.id.nameEditText) as EditText
+        textEditText = findViewById<View>(R.id.textEditText) as EditText
+        priorityEditText = findViewById<View>(R.id.priorityEditText) as EditText
 
         //disable edittexts
-        nameEditText.setEnabled(false);
-        textEditText.setEnabled(false);
-        priorityEditText.setEnabled(false);
+        nameEditText!!.isEnabled = false
+        textEditText!!.isEnabled = false
+        priorityEditText!!.isEnabled = false
 
         //call the dbhandler method getreminder
-        Cursor cursor = dbHandler.getReminder((int) id);
-
-        cursor.moveToFirst();
+        val cursor = dbHandler!!.getReminder(id.toInt())
+        cursor.moveToFirst()
 
         //get the name, text, and priority in the cursor and store it in strings
-        name = cursor.getString(cursor.getColumnIndex( "name"));
-        text = cursor.getString(cursor.getColumnIndex( "text"));
-        priority = cursor.getString(cursor.getColumnIndex( "priority"));
+        name = cursor.getString(cursor.getColumnIndex("name"))
+        text = cursor.getString(cursor.getColumnIndex("text"))
+        priority = cursor.getString(cursor.getColumnIndex("priority"))
 
         //set the name, text, and priority values in the edittexts
-        nameEditText.setText(name);
-        textEditText.setText(text);
-        priorityEditText.setText(priority);
+        nameEditText!!.setText(name)
+        textEditText!!.setText(text)
+        priorityEditText!!.setText(priority)
 
         //initialize the notification manager
-        notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat = NotificationManagerCompat.from(this)
     }
 
     /**
@@ -105,11 +86,10 @@ public class ViewReminder extends AppCompatActivity {
      * @param menu menu resource file for the activity
      * @return true
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_reminder, menu);
-        return true;
+        menuInflater.inflate(R.menu.menu_view_reminder, menu)
+        return true
     }
 
     /**
@@ -118,76 +98,71 @@ public class ViewReminder extends AppCompatActivity {
      * @param item selected menu item in the overflow menu
      * @return true if menu item is selected, else false
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //get the id of the menu item selected
-        switch (item.getItemId()) {
-            case R.id.action_home :
+        return when (item.itemId) {
+            R.id.action_home -> {
                 // initialize an intent for the main activity and start it
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_add_reminder :
+                intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_add_reminder -> {
                 // initialize an intent for the add reminder activity and start it
-                intent = new Intent(this, AddReminder.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                intent = Intent(this, AddReminder::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     /**
      * This method gets called when the delete button in the action bar of the view reminder activity gets clicked
      * @param menuItem database id of the shopping list item to be deleted
      */
-    public void deleteReminder(MenuItem menuItem) {
+    fun deleteReminder(menuItem: MenuItem?) {
         //delete reminder from db
-        dbHandler.deleteReminder((int) id);
+        dbHandler!!.deleteReminder(id.toInt())
 
         //display item deleted toast
-        Toast.makeText(this, "Reminder Deleted!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Reminder Deleted!", Toast.LENGTH_LONG).show()
 
         //displays notification if all high priority reminders are deleted
-        if((dbHandler.getDeletedHighPriority((String) this.priority)).getCount() == 0 && this.priority.equals("High")){
+        if (dbHandler!!.getDeletedHighPriority(priority!!).count == 0 && priority == "High") {
             // initialize Notification
-            Notification notification = new NotificationCompat.Builder(this,
-                    CHANNEL_REMINDER_ID)
+            val notification = NotificationCompat.Builder(this,
+                    App.CHANNEL_REMINDER_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("MyReminder")
-                    .setContentText("High priority reminders deleted!").build();
+                    .setContentText("High priority reminders deleted!").build()
 
             // show notification
-            notificationManagerCompat.notify(1, notification);
-
+            notificationManagerCompat!!.notify(1, notification)
         }
         //displays notification if all medium priority reminders are deleted
-        if((dbHandler.getDeletedMediumPriority((String) this.priority)).getCount() == 0 && this.priority.equals("Medium")){
+        if (dbHandler!!.getDeletedMediumPriority(priority!!).count == 0 && priority == "Medium") {
             // initialize Notification
-            Notification notification = new NotificationCompat.Builder(this,
-                    CHANNEL_REMINDER_ID)
+            val notification = NotificationCompat.Builder(this,
+                    App.CHANNEL_REMINDER_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("MyReminder")
-                    .setContentText("Medium priority reminders deleted!").build();
+                    .setContentText("Medium priority reminders deleted!").build()
 
             // show notification
-            notificationManagerCompat.notify(1, notification);
-
+            notificationManagerCompat!!.notify(1, notification)
         }
         //displays notification if all low priority reminders are deleted
-        if((dbHandler.getDeletedLowPriority((String) this.priority)).getCount() == 0 && this.priority.equals("Low")){
+        if (dbHandler!!.getDeletedLowPriority(priority!!).count == 0 && priority == "Low") {
             // initialize Notification
-            Notification notification = new NotificationCompat.Builder(this,
-                    CHANNEL_REMINDER_ID)
+            val notification = NotificationCompat.Builder(this,
+                    App.CHANNEL_REMINDER_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("MyReminder")
-                    .setContentText("Low priority reminders deleted!").build();
+                    .setContentText("Low priority reminders deleted!").build()
 
             // show notification
-            notificationManagerCompat.notify(1, notification);
-
+            notificationManagerCompat!!.notify(1, notification)
         }
     }
-    }
-
+}

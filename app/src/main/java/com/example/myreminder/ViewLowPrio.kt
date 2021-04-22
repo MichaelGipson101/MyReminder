@@ -1,61 +1,51 @@
-package com.example.myreminder;
+package com.example.myreminder
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.CursorAdapter
+import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
-
-
-
-
-public class ViewLowPrio extends AppCompatActivity {
-
-
+class ViewLowPrio : AppCompatActivity() {
     //declare intent
-    Intent intent;
+   // var intent: Intent? = null
 
     //declare a DBHandler
-    DBHandler dbHandler;
+    var dbHandler: DBHandler? = null
 
     //declare a reminder cursoradapter
-    CursorAdapter lowPriorityCursorAdapter;
+    var lowPriorityCursorAdapter: CursorAdapter? = null
 
     //declare a listview
-    ListView lowPriorityListView;
+    var lowPriorityListView: ListView? = null
 
     /**
      * This method initializes the action bar and view of the activity
      * @param savedInstanceState
      */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         //initializes the view and action bar of the activity
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_low_priority);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_view_low_priority)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
 
         //initialize dbhandler
-        dbHandler = new DBHandler(this, null);
+        dbHandler = DBHandler(this, null)
         //initialize listview
-        lowPriorityListView = (ListView) findViewById(R.id.lowPriorityListView);
+        lowPriorityListView = findViewById<View>(R.id.lowPriorityListView) as ListView
 
         //initialize cursoradapter
-        lowPriorityCursorAdapter = new LowPriorities(this, dbHandler.getLowPriorityReminders(), 0);
+        lowPriorityCursorAdapter = LowPriorities(this, dbHandler!!.lowPriorityReminders, 0)
 
         //set reminder cursoradapter on listview
-        lowPriorityListView.setAdapter(lowPriorityCursorAdapter);
-
-        getSupportActionBar().setSubtitle("Low");
+        lowPriorityListView!!.adapter = lowPriorityCursorAdapter
+        supportActionBar!!.subtitle = "Low"
     }
 
     /**
@@ -64,11 +54,10 @@ public class ViewLowPrio extends AppCompatActivity {
      * @param menu menu resource file for the activity
      * @return true
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_low_priority, menu);
-        return true;
+        menuInflater.inflate(R.menu.menu_view_low_priority, menu)
+        return true
     }
 
     /**
@@ -78,23 +67,22 @@ public class ViewLowPrio extends AppCompatActivity {
      * @param item selected menu item in the overflow menu
      * @return true if the menu item is selected, otherwise false.
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //get the id of the menu item selected
-        switch (item.getItemId()) {
-            case R.id.action_home :
+        return when (item.itemId) {
+            R.id.action_home -> {
                 //initialize an intent for the main activity and start it
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_add_reminder :
+                intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_add_reminder -> {
                 //initialize an intent for the AddReminder activity
-                intent = new Intent(this, AddReminder.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                intent = Intent(this, AddReminder::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
-
 }

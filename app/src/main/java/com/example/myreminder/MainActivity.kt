@@ -1,64 +1,64 @@
-package com.example.myreminder;
+package com.example.myreminder
 
-import android.content.Intent;
-import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import com.example.myreminder.DBHandler
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import com.example.myreminder.R
+import com.example.myreminder.ReminderList
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.AdapterView
+import android.widget.CursorAdapter
+import android.widget.ListView
+import androidx.appcompat.widget.Toolbar
+import com.example.myreminder.ViewReminder
+import com.example.myreminder.MainActivity
+import com.example.myreminder.AddReminder
+import com.example.myreminder.ViewHighPrio
+import com.example.myreminder.ViewMedPrio
+import com.example.myreminder.ViewLowPrio
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
-
-
+class MainActivity : AppCompatActivity() {
     //declare intent
-    Intent intent;
+    //var intent: Intent? = null
 
     //declare a DBHandler
-    DBHandler dbHandler;
+    var dbHandler: DBHandler? = null
 
     //declare a reminder cursoradapter
-    CursorAdapter reminderCursorAdapter;
+    var reminderCursorAdapter: CursorAdapter? = null
 
     //declare a listview
-    ListView reminderListView;
+    var reminderListView: ListView? = null
 
     /**
      * This method initializes the action bar and view of the activity
      * @param savedInstanceState
      */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         //initializes the view and action bar of the activity
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         //initialize dbhandler
-        dbHandler = new DBHandler(this, null);
+        dbHandler = DBHandler(this, null)
         //initialize listview
-        reminderListView = (ListView) findViewById(R.id.reminderListView);
+        reminderListView = findViewById<View>(R.id.reminderListView) as ListView
 
         //initialize cursoradapter
-        reminderCursorAdapter = new ReminderList(this, dbHandler.getReminders(), 0);
+        reminderCursorAdapter = ReminderList(this, dbHandler!!.reminders, 0)
 
         //set reminder cursoradapter on listview
-        reminderListView.setAdapter(reminderCursorAdapter);
-
-        getSupportActionBar().setSubtitle(reminderListView.getAdapter().getCount() + " Reminders");
+        reminderListView!!.adapter = reminderCursorAdapter
+        supportActionBar!!.subtitle = reminderListView!!.adapter.count.toString() + " Reminders"
 
         //register an onitemclicklistener to the listview
-        reminderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        reminderListView!!.onItemClickListener = OnItemClickListener { parent, view, position, id ->
             /**
              * This method gets called when an item in the listview is clicked
              * @param parent item list view
@@ -66,18 +66,23 @@ public class MainActivity extends AppCompatActivity {
              * @param position position of clicked item
              * @param id database id of clicked item
              */
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //initialize intent for viewreminder activity
-                intent = new Intent(MainActivity.this, ViewReminder.class);
+            /**
+             * This method gets called when an item in the listview is clicked
+             * @param parent item list view
+             * @param view viewreminder activity view
+             * @param position position of clicked item
+             * @param id database id of clicked item
+             */
 
-                //put the database id in the intent
-                intent.putExtra("_id", id);
+            //initialize intent for viewreminder activity
+            intent = Intent(this@MainActivity, ViewReminder::class.java)
 
-                //start the viewreminder activity
-                startActivity(intent);
-            }
-        });
+            //put the database id in the intent
+            intent!!.putExtra("_id", id)
+
+            //start the viewreminder activity
+            startActivity(intent)
+        }
     }
 
     /**
@@ -86,11 +91,10 @@ public class MainActivity extends AppCompatActivity {
      * @param menu menu resource file for the activity
      * @return true
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
     /**
@@ -100,37 +104,40 @@ public class MainActivity extends AppCompatActivity {
      * @param item selected menu item in the overflow menu
      * @return true if the menu item is selected, otherwise false.
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //get the id of the menu item selected
-        switch (item.getItemId()) {
-            case R.id.action_home :
+        return when (item.itemId) {
+            R.id.action_home -> {
                 //initialize an intent for the main activity and start it
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_add_reminder :
+                intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_add_reminder -> {
                 //initialize an intent for the AddReminder activity
-                intent = new Intent(this, AddReminder.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_view_high_priority :
+                intent = Intent(this, AddReminder::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_view_high_priority -> {
                 //initialize an intent for the AddReminder activity
-                intent = new Intent(this, ViewHighPrio.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_view_medium_priority :
+                intent = Intent(this, ViewHighPrio::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_view_medium_priority -> {
                 //initialize an intent for the AddReminder activity
-                intent = new Intent(this, ViewMedPrio.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_view_low_priority :
+                intent = Intent(this, ViewMedPrio::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_view_low_priority -> {
                 //initialize an intent for the AddReminder activity
-                intent = new Intent(this, ViewLowPrio.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                intent = Intent(this, ViewLowPrio::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -139,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
      * It starts the addreminder activity.
      * @param view
      */
-    public void openAddReminder(View view){
+    fun openAddReminder(view: View?) {
         //initializes an intent for the addreminder activity and starts it
-        intent = new Intent(this, AddReminder.class);
-        startActivity(intent);
+        intent = Intent(this, AddReminder::class.java)
+        startActivity(intent)
     }
 }
